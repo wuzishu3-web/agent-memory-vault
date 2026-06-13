@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Obsidian
+.obsidian/
+
+# Generated indexes & runtime state (large / machine-specific — do NOT commit)
+embeddings.json
+relations.json
+_system/state/
+_system/logs/
+_system/session-beats/
+*.lock
+
+# A user's real vault should never be committed into this repo.
+# Point AGENT_MEMORY_VAULT at a vault OUTSIDE this checkout.
+my-vault/
+vault-data/
