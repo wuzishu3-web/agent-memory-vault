@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Compile all scripts
+        run: python -m py_compile scripts/*.py
+
+      - name: Smoke test (stdlib-only path, no embedding endpoint)
+        run: |
+          export AGENT_MEMORY_VAULT="$RUNNER_TEMP/ci-vault"
+          python scripts/init_vault.py
+          python scripts/agent_memory.py --type decision --agent claude-code \
+            --title "ci smoke test" --summary "verify scripts run" --body "hello"
+          python scripts/agent_memory.py --type knowledge --agent codex \
+            --title "ci second note" --summary "another note" --body "world"
+          python scripts/update_hot.py --agent claude-code --last "ci run" --active "none"
+          python scripts/agent_memory_boot.py --agent claude-code --task "ci boot"
+          python scripts/extract_relations.py
+          python scripts/vault_health_check.py
+          test -f "$AGENT_MEMORY_VAULT/06_Decisions/"*"ci-smoke-test.md"
+          echo "smoke test passed"

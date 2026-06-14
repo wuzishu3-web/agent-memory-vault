@@ -1,5 +1,14 @@
 # agent-memory-vault
 
+> **Stop letting your AI agents forget.** A shared, persistent memory + knowledge-ingest engine over a plain Markdown vault.
+
+[![CI](https://github.com/wuzishu3-web/agent-memory-vault/actions/workflows/ci.yml/badge.svg)](https://github.com/wuzishu3-web/agent-memory-vault/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![Dependencies](https://img.shields.io/badge/deps-pyyaml%20only-brightgreen.svg)
+
+![architecture](docs/architecture.svg)
+
 **A persistent, shared long-term memory + knowledge-ingest system for AI coding agents** (Claude Code, Codex, and friends), built on a plain Markdown / [Obsidian](https://obsidian.md)-compatible vault.
 
 Your agents stop forgetting. Instead of re-retrieving raw files on every query (classic RAG), they **compile knowledge into a maintained vault** of structured notes — and keep it cross-linked, deduplicated, and indexed automatically.
@@ -50,6 +59,26 @@ What happens, deterministically:
 5. **Re-index** — incremental embeddings + relation extraction.
 
 **Design principle: understanding vs bookkeeping are separated.** The *summary* must come from a capable agent in-context (high quality); the *script* only does the mechanical filing. That's why it can be fully automatic without producing junk.
+
+## Demo
+
+Ingesting a source automatically threads it into your existing knowledge:
+
+```bash
+$ python3 scripts/ingest.py --agent claude-code \
+    --title "Hybrid Retrieval Explained" \
+    --summary "Vector cosine + keyword via RRF, plus a relation-graph one-hop lookup." \
+    --url "https://example.com/hybrid" --source-type article
+
+# → writes  08_Sources/2026-…-Hybrid-Retrieval-Explained.md   (quality gate: passed)
+# → finds the most similar existing note (cosine 0.752) and links it BOTH ways:
+#     new page  ──▶  04_Knowledge/…-Vector-retrieval-deep-dive.md
+#     that note ──▶  back to the new page          ← the bookkeeping a wiki usually rots without
+# → rebuilds the embedding + relation indexes (incremental)
+```
+
+If the embedding endpoint is offline, the page is still written and logged — only
+the cross-references and re-index are skipped (and the page is flagged for later).
 
 ## How it works (architecture)
 
