@@ -119,6 +119,38 @@ your-vault/
     └── scripts/ → (this repo's scripts/)
 ```
 
+## What this is — and isn't
+
+Agent memory is a crowded space, and several mature projects beat this one on raw
+capability. Saying so plainly is the point: it helps you tell whether this is the
+right tool for *you* rather than the "best" one in the abstract.
+
+**This is for you if you:**
+- run **multiple, heterogeneous CLI / coding agents** (Claude Code, Codex, …) and want them to share **one** brain;
+- want memory to be **plain Markdown files you own** — greppable, hand-editable, git-versionable, openable in Obsidian — not rows in a vector DB;
+- prefer **local-first, zero-service, tiny-dependency** (one library + an embedding endpoint) over a framework or a hosted API;
+- like the **"compile knowledge into maintained, cross-linked pages"** stance over "retrieve raw chunks on every query".
+
+**Look elsewhere if you:**
+- need to scale to **millions** of memories — brute-force cosine over a JSON file won't cut it;
+- want **autonomous, self-managing memory** or sophisticated temporal/graph retrieval out of the box;
+- are embedding memory into a **product/app** and want a maintained SDK + integrations.
+
+### How it compares
+
+| | design center | memory lives in | shines when |
+|---|---|---|---|
+| **agent-memory-vault** (this) | files you own, shared by a fleet of CLI agents | a Markdown / Obsidian vault | local power user · multi-agent · human-readable knowledge |
+| **Mem0** | a memory layer/SDK for LLM apps | vector + graph store | auto-extracting memory into your own app |
+| **Letta / MemGPT** | stateful agents with self-editing memory | agent server + DB | autonomous, self-managing agent memory |
+| **Zep / Graphiti** | a production memory backend | temporal knowledge graph | scale + sophisticated temporal retrieval |
+| **claude-mem** | a zero-config Claude Code plugin | local store | automatic capture inside Claude Code, no setup |
+
+None of these is "better" in the abstract — they target different users. This
+project's wedge is **file-ownership + multi-agent sharing + a compile-not-retrieve
+stance, with almost no moving parts.** If you need scale, autonomy, or a polished
+SDK, one of the others is very likely the right call.
+
 ## Install
 
 ```bash
